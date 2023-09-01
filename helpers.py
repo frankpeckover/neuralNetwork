@@ -17,17 +17,3 @@ def relu(inputs, derivative=False):
         matrix = np.minimum(matrix, 1)      
         return matrix
     return np.maximum(0, inputs)
-
-indexToLetter = {
-    0: "A",
-    1: "B",
-    2: "C",
-    3: "D",
-}
-
-letterToMatrix = {
-    'A': [[1],[0],[0],[0]],
-    "B": [[0],[1],[0],[0]],
-    "C": [[0],[0],[1],[0]], 
-    "D": [[0],[0],[0],[1]],
-}

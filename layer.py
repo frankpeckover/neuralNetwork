@@ -16,7 +16,7 @@ class Layer:
     #determine dot product of weight matrix and previous layers inputs as 1D array
     def calculateOutput(self, inputs):
         output = np.dot(self.weights, inputs)
-        output += self.biases
+        output = output + self.biases
         return output
 
     #put outputs through activation function
@@ -26,9 +26,9 @@ class Layer:
     #use deltas input from previous layer and training rate to update layer weight matrix
     def updateWeights(self, delta, input, rate):
         changes = np.dot(delta, input.T) * rate 
-        self.weights += changes
+        self.weights = self.weights + changes
         return True
 
     def updateBiases(self, gradient):
-        self.biases += gradient
+        self.biases = self.biases + gradient
         pass

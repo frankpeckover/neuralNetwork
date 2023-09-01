@@ -5,10 +5,10 @@ import helpers
 
 class NeuralNetwork:
     #networkShape is an int array of layer sizes eg. [2, 3, 2]
-    def __init__(self, networkShape, trainingRate):
+    def __init__(self, networkShape, activationFunctions, trainingRate):
         #array of layers
         self.layers = []
-        self.activationFunction = helpers.sigmoid
+        self.activationFunctions = activationFunctions
         self.trainingRate = trainingRate
         self.addHiddenLayers(self.layers, networkShape)
         pass
@@ -17,7 +17,7 @@ class NeuralNetwork:
     def addHiddenLayers(self, layerArray, networkShape):
         arr = layerArray
         for i in range(1, len(networkShape)):
-            hiddenLayer = Layer(networkShape[i], networkShape[i - 1], self.activationFunction)
+            hiddenLayer = Layer(networkShape[i], networkShape[i - 1], self.activationFunctions[i])
             arr.append(hiddenLayer)
         return arr
 
@@ -82,7 +82,7 @@ class NeuralNetwork:
             output = self.propagateForward(input)
 
             #calculate error based on output from forward propagation
-            error = self.calculateRawError(output[-1], helpers.letterToMatrix[expectedOutputs[i]])
+            error = self.calculateRawError(output[-1], expectedOutputs[i])
             mse.append(self.calculateMSE(error))
 
             #propagate the error backwards to train
@@ -100,9 +100,12 @@ class NeuralNetwork:
         
     def accuracy(self, testData, expectedOutputs):
         correct = 0
-        for i, data in enumerate(testData):
-            prediction =  np.argmax(self.propagateForward(data)[-1])
-            result = helpers.indexToLetter[prediction] == expectedOutputs[i]
+        for i, data in enumerate(testData):        
+            result = self.getFinalResult(data) == expectedOutputs[i]
             if result:
                 correct += 1
         return float(correct) / len(testData)
+    
+    def getFinalResult(self, testData):
+        prediction = np.argmax(self.propagateForward(testData)[-1])
+        return prediction
